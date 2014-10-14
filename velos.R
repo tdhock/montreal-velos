@@ -90,6 +90,9 @@ for(f in files){
     if(all(is.na(count))){
       cat("ignoring ", location, " in ", f, "\n")
     }else{
+      if(location %in% names(loc.replace)){
+        location <- loc.replace[[location]]
+      }
       velos <- rbind(velos, data.frame(location, date, count))
     }
   }
