@@ -1,3 +1,5 @@
+timeseries/index.html: figure-timeseries.R velos.RData
+	R --no-save < $<
 velos.RData: velos.R
 	R --no-save < $<
 veloscomptage.zip:
