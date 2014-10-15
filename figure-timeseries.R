@@ -1,6 +1,6 @@
 works_with_R("3.1.1",
              dplyr="0.2",
-             "tdhock/animint@486830a785840339a3c923dec920358b1aeb0110",
+             "tdhock/animint@0cdf7f2b875c93efb1138e6986979493fda612c6",
              "tdhock/ggplot2@98cefe4d653ce8f214177b66dc030c2f3c725ffb")
 
 load("velos.RData")
@@ -78,8 +78,9 @@ viz <-
        summary=LocSummary+guides(color="none"),
        TimeSeries=TimeSeries+guides(color="none"),
        selector.types=list(location="multiple"),
-       duration=list(date=1000))
+       duration=list(date=1000),
+       title="Montreal cyclists, 2009-2013")
 
 animint2dir(viz, "timeseries")
 
-animint2gist(viz)
+##animint2gist(viz)
