@@ -8,4 +8,4 @@ first I downloaded the data from the
 then I unzip the csv files and read them into velos.RData using velos.R,
 and finally I produced an interactive data visualization using
 [[https://github.com/tdhock/animint/wiki/Gallery][my animint R package]]
-and the figure-velos.R script.
+and the figure-timeseries.R script.
