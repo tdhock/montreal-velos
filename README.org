@@ -6,6 +6,8 @@ The Makefile documents the workflow:
 first I downloaded the data from the 
 [[http://donnees.ville.montreal.qc.ca/][Montreal Data Portal]],
 then I unzip the csv files and read them into velos.RData using velos.R,
-and finally I produced an interactive data visualization using
+and finally I produced an 
+[[http://bl.ocks.org/tdhock/raw/e31932cbc2d3f5635088/][animated interactive data visualization]]
+using
 [[https://github.com/tdhock/animint/wiki/Gallery][my animint R package]]
 and the figure-timeseries.R script.
