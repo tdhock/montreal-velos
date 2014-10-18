@@ -11,3 +11,6 @@ and finally I produced an
 using
 [[https://github.com/tdhock/animint/wiki/Gallery][my animint R package]]
 and the figure-timeseries.R script.
+
+To reproduce the analysis make sure to copy the works_with_R function from works_with.R
+to your ~/.Rprofile where it will be read every time you start R.
