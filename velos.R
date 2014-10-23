@@ -6,7 +6,7 @@ system("head -3 *.csv")
 date.format <- "%A %d %b %Y"
 strftime(Sys.time(), date.format)
 system("locale -a")
-Sys.setlocale("LC_TIME", "fr_CA.utf8")
+Sys.setlocale("LC_TIME", "fr_CA")
 strftime(Sys.time(), date.format)
 first.days.str <- sprintf("%02d/%02d/%4d", 1, 1:12, 2014)
 first.days <- strptime(first.days.str, "%d/%m/%Y")
@@ -25,12 +25,16 @@ month2int <- 1:12
 names(month2int) <- months$data
 print(month2int)
 
-## Some locations seem to be the same, but with different names.
+## TODO: Some locations seem to be the same, but with different names.
 loc.replace <-
   c("Berri1"="Berri",
     "Berri 1"="Berri",
-    "Rachel1"="Rachel")
-##loc.replace <- c()
+    "Rachel1"="Rachel",
+    Mais1="Maisonneuve 1",
+    Mais2="Maisonneuve 2",
+    CSC="Côte-Sainte-Catherine",
+    Parc="du Parc",
+    PierDup="Pierre-Dupuy")
 
 velos <- NULL
 files <- Sys.glob("*.csv")
@@ -45,7 +49,7 @@ for(f in files){
     read.csv(f, encoding="latin1", sep=";", nrow=1)
     "latin1"
   })
-  
+
   ## Then determine the separator -- if we use the correct separator,
   ## we should get more than 1 column.
   first <- read.csv(f, encoding=enc, sep=";", nrow=1)
@@ -80,12 +84,12 @@ for(f in files){
     count.vec <- df[[location]]
     if(is.null(count.vec))count.vec <- NA
 
-    ## For 2010.csv, there are spaces for counts larger than 999, so
-    ## we need to delete these.
+    ## TODO: For 2010.csv, there are spaces for counts larger than
+    ## 999, so we need to delete these.
     if(!is.numeric(count.vec)){
       count.vec <- gsub(" ", "", count.vec)
     }
-    
+
     count <- as.integer(count.vec)
     if(all(is.na(count))){
       cat("ignoring ", location, " in ", f, "\n")
