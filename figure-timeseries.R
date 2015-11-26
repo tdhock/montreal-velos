@@ -14,7 +14,7 @@ ggplot()+
   geom_line(aes(date, count),
             data=velos)+
   geom_point(aes(date, count),
-             data=velos, pch=1)+
+             data=velos, pch=1, alpha=1/2)+
   facet_wrap("location")+
   theme(panel.margin=grid::unit(0, "cm"))
 
@@ -25,7 +25,7 @@ dates <- velos %.%
 
 location.labels <- velos %.%
   group_by(location) %.%
-  filter(seq_along(count)==which.max(count)) 
+  filter(seq_along(count)==which.max(count))
 
 location.ranges <- velos %.%
   group_by(location) %.%
@@ -41,7 +41,10 @@ LocSummary <- ggplot()+
                    xend=max, yend=location,
                    color=location,
                    clickSelects=location),
-             data=location.ranges, alpha=3/4, size=4)
+               data=location.ranges, alpha=3/4, size=10)
+print(LocSummary)
+
+data.frame(dates)
 
 TimeSeries <- ggplot()+
   theme_animint(width=1000)+
@@ -69,6 +72,10 @@ bars <- ggplot()+
                showSelected=date),
            data=velos, stat="identity", position="identity",
            chunk_vars=character())+
+  geom_text(aes("Totem_Laurier", 7500,
+                label=strftime(date, "%A %d %B %Y"),
+                showSelected=date),
+            data=dates)+
   coord_flip()
 print(bars)
 
