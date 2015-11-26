@@ -1,7 +1,7 @@
 works_with_R("3.1.1",
              dplyr="0.2",
-             "tdhock/animint@0cdf7f2b875c93efb1138e6986979493fda612c6",
-             "tdhock/ggplot2@98cefe4d653ce8f214177b66dc030c2f3c725ffb")
+             "tdhock/animint@4257e8cf76eb5021a98010b6629b779a4f383b24",
+             "tdhock/ggplot2@a8b06ddb680acdcdbd927773b1011c562134e4d2")
 
 load("velos.RData")
 
@@ -73,8 +73,8 @@ bars <- ggplot()+
 print(bars)
 
 viz <-
-  list(time=list(variable="date", ms=3000),
-       bars=bars+guides(fill="none"),
+  list(bars=bars+guides(fill="none"),
+       time=list(variable="date", ms=3000),
        summary=LocSummary+guides(color="none"),
        TimeSeries=TimeSeries+guides(color="none"),
        selector.types=list(location="multiple"),
