@@ -1,3 +1,9 @@
+figure-places.pdf: figure-places.R places.RData
+	R --no-save < $<
+places.RData: places.R accidents.RData
+	R --no-save < $<
+accidents.RData: accidents.R
+	R --no-save < $<
 timeseries/index.html: figure-timeseries.R velos.RData
 	R --no-save < $<
 velos.RData: velos.R
