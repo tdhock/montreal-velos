@@ -1,4 +1,4 @@
-figure-places.pdf: figure-places.R places.RData
+figure-places.png: figure-places.R places.RData
 	R --no-save < $<
 places.RData: places.R accidents.RData
 	R --no-save < $<

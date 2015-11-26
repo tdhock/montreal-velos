@@ -1,6 +1,17 @@
 Montreal cyclist counts data viz
 
-Presentation for Montreal Data Meetup, 22 Oct 2014
+*** 26 Nov 2015, Bike accidents data
+
+- [[file:accidents.R]] reads data from csv files into R.
+- [[file:places.R]] uses google maps to determine the geographic
+  coordinates (lat/lon) of each accident. TODO: how to improve the
+  accuracy of the positions?
+- [[file:figure-places.R]] plots the data, and it is clear that there are
+  some problems, e.g. the blue circles:
+
+[[file:figure-places.png]]
+
+*** 22 Oct 2014, Montreal Data Meetup
 
 The Makefile documents the workflow:
 first I downloaded the data from the

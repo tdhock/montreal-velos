@@ -19,10 +19,13 @@ places.df$date <-
 
 gg <- ggplot()+
   coord_equal()+
+  ggtitle(paste("Bike accidents in Montreal, 2002-2004",
+                "Rachel and Maisonneuve only",
+                sep="\n"))+
   geom_point(aes(lon, lat, color=type, shape=piste),
              data=places.df)
 
-pdf("figure-places.pdf")
+png("figure-places.png")
 print(gg)
 dev.off()
 
