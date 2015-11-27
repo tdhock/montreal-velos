@@ -2,14 +2,21 @@ Montreal cyclist counts data viz
 
 *** 26 Nov 2015, Bike accidents data
 
+[[http://bl.ocks.org/tdhock/raw/7506ad86b9df6cf1ec8b/][Interactive data viz with map of Montreal and time series of accidents
+in Rachel and Maisonneuve bike paths]].
+
 - [[file:accidents.R]] reads data from csv files into R.
 - [[file:places.R]] uses google maps to determine the geographic
-  coordinates (lat/lon) of each accident. TODO: how to improve the
-  accuracy of the positions?
-- [[file:figure-places.R]] plots the data, and it is clear that there are
-  some problems, e.g. the blue circles:
+  coordinates (lat/lon) of each accident. Improved the accuracy of the
+  positions by verifying on google maps and writing positions in
+  [[file:manual.geocodes.csv]].
+- [[file:figure-places.R]] plots the data:
 
-[[file:figure-places.png]]
+[[file:figure-places-prefix.png]]
+
+[[file:figure-places-timeSeries-facets.png]]
+
+[[file:figure-places-timeSeries-facets-people.png]]
 
 *** 22 Oct 2014, Montreal Data Meetup
 
