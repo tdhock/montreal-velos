@@ -1,6 +1,6 @@
-figure-places.png: figure-places.R places.RData
+figure-places/index.html: figure-places.R places.RData
 	R --no-save < $<
-places.RData: places.R accidents.RData
+places.RData: places.R accidents.RData manual.geocodes.csv
 	R --no-save < $<
 accidents.RData: accidents.R
 	R --no-save < $<

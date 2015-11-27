@@ -17,15 +17,16 @@ places.df$piste <-
 places.df$date <-
   strptime(places.df$date.str, "%Y-%m-%d")
 
-gg <- ggplot()+
+viz <- list(map=ggplot()+
   coord_equal()+
   ggtitle(paste("Bike accidents in Montreal, 2002-2004",
                 "Rachel and Maisonneuve only",
                 sep="\n"))+
-  geom_point(aes(lon, lat, color=type, shape=piste),
-             data=places.df)
+  geom_point(aes(lon, lat, color=type,
+                 tooltip=query.prefix,
+                 shape=piste),
+             size=5,
+             data=places.df))
 
-png("figure-places.png")
-print(gg)
-dev.off()
+animint2dir(viz, "figure-places")
 

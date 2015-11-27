@@ -4,14 +4,13 @@ load("accidents.RData")
 
 some.accidents <- data.table(accidents)[grepl("MAISONNEUV|RACHEL", street),]
 some.accidents[, street := sub("FACE A$", "", street)]
-some.accidents[, cross.street := sub("^LAURE$", "ANDRE LAURENDEAU",
-                                cross.street)]
 some.accidents[, 
   query.prefix := ifelse(!is.na(street.number), paste(street.number, street),
     ifelse(grepl(" ET ", street), sub(" ET ", " and ", street),
            paste(street, "and", cross.street))
                           ) ]
-some.accidents[, geocode.query := paste0(query.prefix, ", Montreal, Canada")]
+query.suffix <- ", Montreal, Canada"
+some.accidents[, geocode.query := paste0(query.prefix, query.suffix)]
 
 if(file.exists("places.RData")){
   load("places.RData")
@@ -19,8 +18,19 @@ if(file.exists("places.RData")){
   geocode.list <- list()
 }
 
-is.missing <- sapply(geocode.list, function(df)is.na(df$lon[1]))
+is.missing <- sapply(geocode.list, function(df){
+  lon <- df$lon[1]
+  is.null(lon) || is.na(lon)
+})
 geocode.list <- geocode.list[!is.missing]
+
+manual.geocodes <- read.csv("manual.geocodes.csv", comment.char="#")
+manual.geocodes$type <- "manual"
+manual.geocodes$loctype <- "manual"
+for(row.i in 1:nrow(manual.geocodes)){
+  g.row <- manual.geocodes[row.i,]
+  geocode.list[[paste0(g.row$query.prefix, query.suffix)]] <- g.row
+}
 
 new.query.vec <-
   unique(some.accidents[! geocode.query %in% names(geocode.list), geocode.query])
@@ -37,7 +47,8 @@ setkey(some.accidents, geocode.query)
 places.list <- list()
 for(query in unique(some.accidents$geocode.query)){
   geocode.result <- geocode.list[[query]]
-  geocode.some <- geocode.result[, c("lon", "lat", "type", "loctype")]
+  geocode.some <-
+    data.frame(geocode.result)[, c("lon", "lat", "type", "loctype")]
   places.list[[query]] <-
     data.frame(query,
                some.accidents[query],
@@ -45,5 +56,7 @@ for(query in unique(some.accidents$geocode.query)){
 }
 places <- do.call(rbind, places.list)
 rownames(places) <- NULL
+
+stopifnot(nrow(places) == nrow(some.accidents))
 
 save(places, geocode.list, file="places.RData")
