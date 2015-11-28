@@ -106,4 +106,4 @@ table(velos$location)
 non.disponible <- subset(velos, grepl("non", location))
 stopifnot(nrow(non.disponible) == 0)
 
-save(velos, file="velos.RData")
+save(velos, localisation, file="velos.RData")

@@ -1,3 +1,9 @@
+figure-bike-paths.png: figure-bike-paths.R counter.locations.RData bike.paths.RData
+	R --no-save < $<
+counter.locations.RData: counter.locations.R
+	R --no-save < $<
+bike.paths.RData: bike.paths.R
+	R --no-save < $<
 figure-places/index.html: figure-places.R places.RData
 	R --no-save < $<
 places.RData: places.R accidents.RData manual.geocodes.csv
