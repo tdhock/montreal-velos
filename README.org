@@ -1,5 +1,9 @@
 Montreal cyclist counts data viz
 
+*** 28 Nov 2015, bike paths and counters
+
+[[file:figure-bike-paths.png]]
+
 *** 26 Nov 2015, Bike accidents data
 
 [[http://bl.ocks.org/tdhock/raw/7506ad86b9df6cf1ec8b/][Interactive data viz with map of Montreal and time series of accidents
