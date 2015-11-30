@@ -1,8 +1,17 @@
 Montreal cyclist counts data viz
 
+*** TODOs
+
+- rajouter les données des compteurs de la ville, [[file:velos.R]],
+  http://bl.ocks.org/tdhock/raw/ccd2c65933631f454c09/
+- rajouter tous les autres accidents (actuellement j'ai régardé
+  seulement les accidents sur Maisonneuve et Rachel)
+
 *** 28 Nov 2015, bike paths and counters
 
 [[file:figure-bike-paths.png]]
+- got data for bike paths.
+- got data for counter locations.
 
 *** 26 Nov 2015, Bike accidents data
 
