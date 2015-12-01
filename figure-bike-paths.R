@@ -10,6 +10,7 @@ gg <- ggplot()+
   ggtitle("Montreal bike paths and counters")+
   coord_equal()+
   scale_size_manual(values=c(winter=2, "not winter"=0.5))+
+  scale_color_brewer(palette="Dark3")+
   geom_path(aes(lon, lat, color=TYPE_VOIE,
                 size=SAISONS4,
                 group=paste(feature.i, path.i)),

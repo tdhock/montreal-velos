@@ -1,3 +1,5 @@
+figure-timeseries/index.html: figure-timeseries.R velos.RData
+	R --no-save < $<
 figure-bike-paths.png: figure-bike-paths.R counter.locations.RData bike.paths.RData
 	R --no-save < $<
 counter.locations.RData: counter.locations.R
@@ -9,8 +11,6 @@ figure-places/index.html: figure-places.R places.RData
 places.RData: places.R accidents.RData manual.geocodes.csv
 	R --no-save < $<
 accidents.RData: accidents.R
-	R --no-save < $<
-timeseries/index.html: figure-timeseries.R velos.RData
 	R --no-save < $<
 velos.RData: velos.R
 	R --no-save < $<

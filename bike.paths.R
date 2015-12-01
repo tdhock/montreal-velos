@@ -7,7 +7,7 @@ conversion.list <- list(
     "1"="Chaussée désignée",
     "2"="Accotement asphalté",
     "3"="Bande cyclable",
-    "4"="Piste cyclable sue rue",
+    "4"="Piste cyclable sur rue",
     "5"="Piste cyclable en site propre",
     "6"="Piste cyclable au niveau du trottoir",
     "7"="Sentier polyvalent"),

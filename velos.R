@@ -37,7 +37,8 @@ loc.replace <-
     PierDup="Pierre-Dupuy")
 
 velos <- NULL
-files <- Sys.glob("*.csv")
+"defivelomtl/Comptages cyclistes automatiques par boucles de détection/comptagesvelo2015.csv" #more data.
+files <- paste0(2009:2013, ".csv")
 for(f in files){
   ## First determine the encoding -- for example
   ## read.csv("2010.csv",encoding="utf8") gives error "invalid
@@ -106,4 +107,4 @@ table(velos$location)
 non.disponible <- subset(velos, grepl("non", location))
 stopifnot(nrow(non.disponible) == 0)
 
-save(velos, localisation, file="velos.RData")
+save(velos, file="velos.RData")

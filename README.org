@@ -2,18 +2,26 @@ Montreal cyclist counts data viz
 
 *** TODOs
 
-- rajouter les données des compteurs de la ville, [[file:velos.R]],
-  http://bl.ocks.org/tdhock/raw/ccd2c65933631f454c09/
 - rajouter tous les autres accidents (actuellement j'ai régardé
   seulement les accidents sur Maisonneuve et Rachel)
+- look at other counter data to see if they are consistent with the
+  ones we already have plotted, and to see if they supply any info
+  where it was missing before.
+- still need to join accidents to the main time series + map plot
+  (maybe totals per month, maybe not?)
 
-*** 28 Nov 2015, bike paths and counters
+*** 30 Nov 2015 counters + counter locations + bike paths 
+
+[[http://bl.ocks.org/tdhock/raw/31b34b0e7c0f35a80c25/]]
+- joined counter locations with counter data.
+
+*** 28 Nov 2015 bike paths and counters
 
 [[file:figure-bike-paths.png]]
 - got data for bike paths.
 - got data for counter locations.
 
-*** 26 Nov 2015, Bike accidents data
+*** 26 Nov 2015 Bike accidents data
 
 [[http://bl.ocks.org/tdhock/raw/7506ad86b9df6cf1ec8b/][Interactive data viz with map of Montreal and time series of accidents
 in Rachel and Maisonneuve bike paths]].
@@ -31,7 +39,7 @@ in Rachel and Maisonneuve bike paths]].
 
 [[file:figure-places-timeSeries-facets-people.png]]
 
-*** 22 Oct 2014, Montreal Data Meetup
+*** 22 Oct 2014 Montreal Data Meetup
 
 The Makefile documents the workflow:
 first I downloaded the data from the
@@ -41,7 +49,7 @@ and finally I produced an
 [[http://bl.ocks.org/tdhock/raw/ccd2c65933631f454c09/][animated interactive data visualization]]
 using
 [[https://github.com/tdhock/animint/wiki/Gallery][my animint R package]]
-and the figure-timeseries.R script.
+and the [[file:figure-timeseries.R]] script.
 
 To reproduce the analysis make sure to copy the works_with_R function from works_with.R
 to your ~/.Rprofile where it will be read every time you start R.
