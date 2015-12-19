@@ -24,6 +24,12 @@ is.missing <- sapply(geocode.list, function(df){
 })
 geocode.list <- geocode.list[!is.missing]
 
+## TODO: use machine learning to geocode? There are a few addresses
+## for which the automatic geocodes were not accurate enough. The
+## others were accurate enough. Can we analyze the geocode response to
+## determine if it is not accurate enough? Can we analyze the query to
+## determine in advance whether or not we need to make a manual
+## geocode?
 manual.geocodes <- read.csv("manual.geocodes.csv", comment.char="#")
 manual.geocodes$type <- "manual"
 manual.geocodes$loctype <- "manual"

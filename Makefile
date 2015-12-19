@@ -1,4 +1,4 @@
-figure-timeseries/index.html: figure-timeseries.R velos.RData
+figure-timeseries/index.html: figure-timeseries.R velos.RData bike.paths.RData counter.locations.RData places.RData
 	R --no-save < $<
 figure-bike-paths.png: figure-bike-paths.R counter.locations.RData bike.paths.RData
 	R --no-save < $<

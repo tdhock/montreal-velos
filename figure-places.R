@@ -1,6 +1,6 @@
 works_with_R("3.2.2",
-             "tdhock/animint@4257e8cf76eb5021a98010b6629b779a4f383b24",
              "tdhock/ggplot2@a8b06ddb680acdcdbd927773b1011c562134e4d2",
+             "tdhock/animint@3b1f84ec926ffbd765f0aa004596e43203750fd4",
              data.table="1.9.6")
 
 load("places.RData")
