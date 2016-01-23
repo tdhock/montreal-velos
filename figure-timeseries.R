@@ -190,23 +190,31 @@ TimeSeries <- ggplot()+
 print(TimeSeries)
 
 MonthSeries <- ggplot()+
-  guides(color="none")+
+  guides(color="none", fill="none")+
   theme_bw()+
   theme_animint(width=1000)+
   geom_tallrect(aes(xmin=month01.POSIXct, xmax=next01.POSIXct,
                     clickSelects=month),
                 data=months, alpha=1/2)+
   geom_line(aes(month.POSIXct, count, group=location,
+                color=location,
                 showSelected=location,
                 clickSelects=location),
             data=counts.per.month)+
   scale_color_manual(values=location.colors)+
+  scale_fill_manual(values=location.colors)+
   xlab("month")+
-  geom_point(aes(month.POSIXct, count, color=location,
+  ylab("bike counts per month")+
+  geom_point(aes(month.POSIXct, count, fill=location,
+                 tooltip=paste(
+                   count, "bikers counted at",
+                   location, "in", month),
                  showSelected=location,
                  clickSelects=location),
+             size=5,
+             color="black",
              data=counts.per.month)+
-  geom_text(aes(month.POSIXct, count+2000, color=location, label=location,
+  geom_text(aes(month.POSIXct, count+5000, color=location, label=location,
                 showSelected=location,
                 clickSelects=location),
             data=month.labels)
