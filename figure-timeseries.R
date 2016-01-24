@@ -7,32 +7,92 @@ works_with_R("3.2.2",
 load("velos.RData")
 load("bike.paths.RData")
 load("counter.locations.RData")
-load("places.RData")
+load("accidents.RData")
 
 one.day <- 60 * 60 * 24
 
+accidents.dt <- data.table(accidents)
+accidents.dt[, date.POSIXct := as.POSIXct(strptime(date.str, "%Y-%m-%d"))]
+accidents.dt[, month.str := strftime(date.POSIXct, "%Y-%m")]
+
 velos.dt <- data.table(velos)
 velos.dt[, month.str := strftime(date, "%Y-%m")]
+
+uniq.month.vec <- unique(c(
+  accidents.dt$month.str,
+  velos.dt[!(count==0 | is.na(count)), month.str]))
+months <- data.table(month.str=uniq.month.vec)
+months[, month01.str := paste0(month.str, "-01")]
+months[, month01.POSIXct := as.POSIXct(strptime(month01.str, "%Y-%m-%d"))]
+months[, next.POSIXct := month01.POSIXct + one.day * 31]
+months[, next01.str := paste0(strftime(next.POSIXct, "%Y-%m"), "-01")]
+months[, next01.POSIXct := as.POSIXct(strptime(next01.str, "%Y-%m-%d"))]
+months[, month := strftime(month01.POSIXct, "%B %Y")]
+
+month.levs <- months[order(month01.POSIXct), month]
+
+accidents.dt[, month.text := strftime(date.POSIXct, "%B %Y")]
+accidents.dt[, month := factor(month.text, month.levs)]
+accidents.dt[, month.POSIXct := as.POSIXct(
+  strptime(paste0(month.str, "-15"), "%Y-%m-%d"))]
+stopifnot(!is.na(accidents.dt$month.POSIXct))
+accidents.per.month <- accidents.dt[, list(
+  deaths=sum(deaths),
+  people.severely.injured=sum(people.severely.injured),
+  people.slightly.injured=sum(people.slightly.injured)
+), by=.(month, month.str, month.text, month.POSIXct)]
+accidents.per.month[, next.POSIXct := month.POSIXct + one.day * 30]
+accidents.per.month[, month01.str := paste0(strftime(month.POSIXct, "%Y-%m"), "-01")]
+accidents.per.month[, month01.POSIXct := as.POSIXct(strptime(month01.str, "%Y-%m-%d"))]
+accidents.per.month[, next01.str := paste0(strftime(next.POSIXct, "%Y-%m"), "-01")]
+accidents.per.month[, next01.POSIXct := as.POSIXct(strptime(next01.str, "%Y-%m-%d"))]
+
+severity.vec <- c(
+  "people slightly injured",
+  "people severely injured",
+  "deaths")
+accidents.by.severity <- list()
+for(severity in severity.vec){
+  severity.col <- gsub(" ", ".", severity)
+  people <- accidents.per.month[[severity.col]]
+  accidents.by.severity[[severity]] <-
+    data.table(accidents.per.month,
+               severity=factor(severity, severity.vec),
+               people)
+}
+accidents.tall <- do.call(rbind, accidents.by.severity)
+
 velos.dt[, month.text := strftime(date, "%B %Y")]
-velos.dt[, month := factor(month.text, unique(month.text))]
+velos.dt[, month := factor(month.text, month.levs)]
 velos.dt[, month.POSIXct := as.POSIXct(
   strptime(paste0(month.str, "-15"), "%Y-%m-%d"))]
 counts.per.month <- velos.dt[, list(
   count=sum(count)
-), by=.(location, month, month.POSIXct)][0 < count,]
-months <- counts.per.month[, list(
-  count=sum(count)
-), by=.(month, month.POSIXct)]
-months[, next.POSIXct := month.POSIXct + one.day * 30]
-months[, month01.str := paste0(strftime(month.POSIXct, "%Y-%m"), "-01")]
-months[, month01.POSIXct := as.POSIXct(strptime(month01.str, "%Y-%m-%d"))]
-months[, next01.str := paste0(strftime(next.POSIXct, "%Y-%m"), "-01")]
-months[, next01.POSIXct := as.POSIXct(strptime(next01.str, "%Y-%m-%d"))]
+), by=.(location, month, month.str, month.POSIXct)][0 < count,]
 month.labels <- counts.per.month[, {
   .SD[count==max(count), ]
 }, by=location]
-  
-places.dt <- data.table(places)
+
+##dput(RColorBrewer::brewer.pal(10, "Reds"))
+severity.colors <- 
+  c("#FFF5F0",#lite red
+    "people slightly injured"="#FEE0D2",
+    "#FCBBA1",
+    "#FC9272",
+    "people severely injured"="#FB6A4A",
+    "#EF3B2C", 
+    "#CB181D",
+    deaths="#A50F15",
+    "#67000D")#dark red
+ggplot()+
+  geom_tallrect(aes(xmin=month01.POSIXct, xmax=next01.POSIXct,
+                    clickSelects=month),
+                data=months, alpha=1/2)+
+  scale_fill_manual(values=severity.colors)+
+  geom_bar(aes(month.POSIXct, people, fill=severity),
+           stat="identity",
+           color="black",
+           data=accidents.tall)
 
 counter.locations[, lon := coord_X]
 counter.locations[, lat := coord_Y]
@@ -220,6 +280,45 @@ MonthSeries <- ggplot()+
             data=month.labels)
 print(MonthSeries)
 
+MonthFacet <- 
+
+  ggplot()+
+  ggtitle("counts per month, select month")+
+  guides(color="none")+
+  theme_bw()+
+  facet_grid(facet ~ ., scales="free")+
+  theme(panel.margin=grid::unit(0, "lines"))+
+  theme_animint(width=1000)+
+  geom_tallrect(aes(xmin=month01.POSIXct, xmax=next01.POSIXct,
+                    clickSelects=month),
+                data=months, alpha=1/2)+
+  geom_line(aes(month.POSIXct, count, group=location,
+                color=location,
+                showSelected=location,
+                clickSelects=location),
+            data=data.table(counts.per.month, facet="cyclists at counters"))+
+  scale_color_manual(values=location.colors)+
+  xlab("month")+
+  ylab("")+
+  geom_point(aes(month.POSIXct, count, color=location,
+                 tooltip=paste(
+                   count, "bikers counted at",
+                   location, "in", month),
+                 showSelected=location,
+                 clickSelects=location),
+             size=5,
+             fill="grey",
+             data=data.table(counts.per.month, facet="cyclists at counters"))+
+  geom_text(aes(month.POSIXct, count+5000, color=location, label=location,
+                showSelected=location,
+                clickSelects=location),
+            data=data.table(month.labels, facet="cyclists at counters"))+
+  scale_fill_manual(values=severity.colors, breaks=rev(severity.vec))+
+  geom_bar(aes(month.POSIXct, people, fill=severity),
+           stat="identity",
+           color=NA,
+           data=data.table(accidents.tall, facet="city-wide accidents"))
+
 bars <- ggplot()+
   geom_bar(aes(location, count, fill=location,
                key=location,
@@ -237,12 +336,13 @@ print(bars)
 viz <-
   list(##bars=bars+guides(fill="none"),
     ##TimeSeries=TimeSeries+guides(color="none"),
-    MonthSeries=MonthSeries,
+    ##MonthSeries=MonthSeries,
+    MonthFacet=MonthFacet,
     ##summary=LocSummary+guides(color="none"),
     summary=MonthSummary,
     map=mtl.map,
     selector.types=list(location="multiple"),
-    time=list(variable="month", ms=2000),
+    ##time=list(variable="month", ms=2000),
     duration=list(month=2000),
     first=list(location=c("Berri", "Rachel")),
     title="Montreal cyclists, 2009-2013")
