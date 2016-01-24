@@ -2,13 +2,20 @@ Montreal cyclist counts data viz
 
 *** TODOs
 
-- rajouter tous les autres accidents (actuellement j'ai régardé
-  seulement les accidents sur Maisonneuve et Rachel)
+- Geocode all the accident locations. So far I have only done the
+  accidents that happened on Rachel and Maisonneuve. Since the address
+  data is not very good it is difficult to find a precise address
+  using automatic geocoding services like ggmap + google maps API. Is
+  there another way to lookup lat/lon data for each accident?
+- Plot accidents for the selected month on a bigger map of Montreal
+  (not just downtown).
 - look at other counter data to see if they are consistent with the
   ones we already have plotted, and to see if they supply any info
   where it was missing before.
-- still need to join accidents to the main time series + map plot
-  (maybe totals per month, maybe not?)
+
+*** 24 Jan 2016 accidents + select month
+
+http://bl.ocks.org/tdhock/raw/b79641a2f5dcc46d1ca0/
 
 *** 30 Nov 2015 counters + counter locations + bike paths 
 
