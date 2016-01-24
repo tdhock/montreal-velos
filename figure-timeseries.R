@@ -72,6 +72,14 @@ counts.per.month <- velos.dt[, list(
 month.labels <- counts.per.month[, {
   .SD[count==max(count), ]
 }, by=location]
+city.wide.cyclists <- counts.per.month[0 < count, list(
+  count=sum(count)
+), by=.(month, month.str, month.POSIXct)]
+city.wide.cyclists[, month01.str := paste0(month.str, "-01")]
+city.wide.cyclists[, month01.POSIXct := as.POSIXct(strptime(month01.str, "%Y-%m-%d"))]
+city.wide.cyclists[, next.POSIXct := month01.POSIXct + one.day * 31]
+city.wide.cyclists[, next01.str := paste0(strftime(next.POSIXct, "%Y-%m"), "-01")]
+city.wide.cyclists[, next01.POSIXct := as.POSIXct(strptime(next01.str, "%Y-%m-%d"))]
 
 ##dput(RColorBrewer::brewer.pal(10, "Reds"))
 severity.colors <- 
@@ -281,7 +289,6 @@ MonthSeries <- ggplot()+
 print(MonthSeries)
 
 MonthFacet <- 
-
   ggplot()+
   ggtitle("counts per month, select month")+
   guides(color="none")+
@@ -291,7 +298,9 @@ MonthFacet <-
   theme_animint(width=1000)+
   geom_tallrect(aes(xmin=month01.POSIXct, xmax=next01.POSIXct,
                     clickSelects=month),
-                data=months, alpha=1/2)+
+                data=data.table(city.wide.cyclists,
+                                facet="cyclists at counters"),
+                alpha=1/2)+
   geom_line(aes(month.POSIXct, count, group=location,
                 color=location,
                 showSelected=location,
@@ -302,7 +311,7 @@ MonthFacet <-
   ylab("")+
   geom_point(aes(month.POSIXct, count, color=location,
                  tooltip=paste(
-                   count, "bikers counted at",
+                   count, "cyclists counted at",
                    location, "in", month),
                  showSelected=location,
                  clickSelects=location),
@@ -317,7 +326,26 @@ MonthFacet <-
   geom_bar(aes(month.POSIXct, people, fill=severity),
            stat="identity",
            color=NA,
-           data=data.table(accidents.tall, facet="city-wide accidents"))
+           data=data.table(accidents.tall, facet="city-wide accidents"))+
+  geom_tallrect(aes(xmin=month01.POSIXct, xmax=next01.POSIXct,
+                    tooltip=paste(
+                      ifelse(deaths==0, "",
+                             ifelse(deaths==1,
+                                    "1 death, ",
+                                    paste(deaths, "deaths, "))),
+                      ifelse(people.severely.injured==0, "",
+                             ifelse(people.severely.injured==1,
+                                    "1 person severely injured, ",
+                                    paste(people.severely.injured,
+                                          "people severely injured, "))),
+                      people.slightly.injured,
+                      "people slightly injured in",
+                      month),
+                    clickSelects=month),
+                alpha=0.5,
+                data=data.table(accidents.per.month,
+                                facet="city-wide accidents"))
+
 
 bars <- ggplot()+
   geom_bar(aes(location, count, fill=location,
