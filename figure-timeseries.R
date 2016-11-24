@@ -9,6 +9,13 @@ load("bike.paths.RData")
 load("counter.locations.RData")
 load("accidents.RData")
 
+montreal.bikes <- list(
+  counter.counts=data.frame(velos),
+  counter.locations=data.frame(counter.locations),
+  path.locations=data.frame(bike.paths),
+  accidents=data.frame(accidents))
+save(montreal.bikes, file="montreal.bikes.RData", compress="xz")
+
 one.day <- 60 * 60 * 24
 
 accidents.dt <- data.table(accidents)
