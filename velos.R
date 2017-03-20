@@ -1,4 +1,8 @@
-system("head -3 *.csv")
+works_with_R(
+  "3.3.3",
+  "Rdatatable/data.table@ce00cb14dc844cac1286681a1da670a2d2405b85")
+
+system("head -3 [0-9]*.csv")
 
 ## Some code that shows why we can't use strptime to read all the
 ## dates. For example, in the fr_CA.utf8 locale, the month févr is
@@ -36,7 +40,7 @@ loc.replace <-
     Parc="du Parc",
     PierDup="Pierre-Dupuy")
 
-velos <- NULL
+velos.list <- list()
 "defivelomtl/Comptages cyclistes automatiques par boucles de détection/comptagesvelo2015.csv" #more data.
 files <- paste0(2009:2013, ".csv")
 for(f in files){
@@ -54,11 +58,13 @@ for(f in files){
   ## Then determine the separator -- if we use the correct separator,
   ## we should get more than 1 column.
   first <- read.csv(f, encoding=enc, sep=";", nrow=1)
-  df <- if(ncol(first)==1){
-    read.csv(f, encoding=enc, sep=",", check.names=FALSE)
-  }else{
-    read.csv(f, encoding=enc, sep=";", check.names=FALSE)
-  }
+  sep <- ifelse(ncol(first)==1, ",", ";")
+  df <- read.csv(f, encoding=enc, sep=sep, check.names=FALSE)
+
+  ## Do the same with data.table: no need to specify encoding.
+  first <- fread(f, sep=";", nrow=2, header=TRUE)
+  sep <- ifelse(ncol(first)==1, ",", ";")
+  dt <- fread(f, sep=sep)
 
   ## Translate dates from long (samedi 01 janv 2011) to numeric
   ## (01/01/2011).
@@ -98,10 +104,12 @@ for(f in files){
       if(location %in% names(loc.replace)){
         location <- loc.replace[[location]]
       }
-      velos <- rbind(velos, data.frame(location, date, count))
+      velos.list[[paste(f, location)]] <- data.frame(
+        location, date, count)
     }
   }
 }
+velos <- do.call(rbind, velos.list)
 
 table(velos$location)
 non.disponible <- subset(velos, grepl("non", location))
