@@ -1,7 +1,3 @@
-works_with_R(
-  "3.3.3",
-  "Rdatatable/data.table@ce00cb14dc844cac1286681a1da670a2d2405b85")
-
 system("head -3 [0-9]*.csv")
 
 ## Some code that shows why we can't use strptime to read all the
@@ -60,11 +56,6 @@ for(f in files){
   first <- read.csv(f, encoding=enc, sep=";", nrow=1)
   sep <- ifelse(ncol(first)==1, ",", ";")
   df <- read.csv(f, encoding=enc, sep=sep, check.names=FALSE)
-
-  ## Do the same with data.table: no need to specify encoding.
-  first <- fread(f, sep=";", nrow=2, header=TRUE)
-  sep <- ifelse(ncol(first)==1, ",", ";")
-  dt <- fread(f, sep=sep)
 
   ## Translate dates from long (samedi 01 janv 2011) to numeric
   ## (01/01/2011).
